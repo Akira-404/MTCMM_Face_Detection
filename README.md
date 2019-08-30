@@ -12,5 +12,4 @@ mtcnn主要使用技术：
 3、NMS（非极大值抑制）  
 4、PRelu  
 实验效果：  
-![](https://github.com/omega-Lee/mtcnn_read_photo/raw/master/Face/nana.jpg) 
-![](https://github.com/omega-Lee/mtcnn_read_photo/blob/master/Face/nana.jpg)
+![image](https://github.com/omega-Lee/mtcnn_read_photo/blob/master/Face/nana.jpg)
