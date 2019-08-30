@@ -11,3 +11,5 @@ mtcnn主要使用技术：
 2、Bounding-Box regression
 3、NMS（非极大值抑制）
 4、PRelu
+实验效果：
+![](https://github.com/mtcnn_read_photo/Face/nana.jpg) 
