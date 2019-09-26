@@ -2,7 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../GUI_Demo/.idea/GUI_Demo.iml" filepath="$PROJECT_DIR$/../GUI_Demo/.idea/GUI_Demo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../KNN/.idea/KNN.iml" filepath="$PROJECT_DIR$/../KNN/.idea/KNN.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/MTCNN_Photo.iml" filepath="$PROJECT_DIR$/.idea/MTCNN_Photo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../Face_Recognition_Test/.idea/facenet_facerecognition.iml" filepath="$PROJECT_DIR$/../Face_Recognition_Test/.idea/facenet_facerecognition.iml" />
     </modules>
   </component>
 </project>

@@ -34,8 +34,14 @@ while True:
     # frame = cv2.resize(frame, (int(400), int(400)), interpolation=cv2.INTER_LINEAR)
     cv2.imshow('src',frame)
     bounding_boxes, _ = align.detect_face.detect_face(frame, minsize, pnet, rnet, onet, threshold, factor)
-    nrof_faces = bounding_boxes.shape[0]  # 人脸数目
-    print('找到人脸数目为：{}'.format(nrof_faces))
+    faces_num = bounding_boxes.shape[0]  # 人脸数目
+    print('bounding_boxes:', bounding_boxes)
+    print('_:',_)
+    print('找到人脸数目为：{}'.format(faces_num))
+    print(bounding_boxes.shape)
+    print(bounding_boxes)
+    print(np.squeeze(bounding_boxes))
+    print(np.squeeze(bounding_boxes).shape)
 
     crop_faces = []
     for face_position in bounding_boxes:

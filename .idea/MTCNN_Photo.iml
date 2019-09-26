@@ -4,6 +4,10 @@
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="GUI_Demo" />
+    <orderEntry type="module" module-name="facenet_facerecognition" />
+    <orderEntry type="module" module-name="facenet_facerecognition" />
+    <orderEntry type="module" module-name="KNN" />
   </component>
   <component name="TestRunnerService">
     <option name="projectConfiguration" value="pytest" />
