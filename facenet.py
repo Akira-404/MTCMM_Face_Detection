@@ -1,6 +1,3 @@
-"""Functions for building the face recognition network.
-"""
-
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -146,8 +143,7 @@ def _add_loss_summaries(total_loss):
 def train(total_loss, global_step, optimizer, learning_rate, moving_average_decay, update_gradient_vars, log_histograms=True):
     # Generate moving averages of all losses and associated summaries.
     loss_averages_op = _add_loss_summaries(total_loss)
-
-    # Compute gradients.
+    # 计算梯度
     with tf.control_dependencies([loss_averages_op]):
         if optimizer=='ADAGRAD':
             opt = tf.train.AdagradOptimizer(learning_rate)
@@ -161,31 +157,31 @@ def train(total_loss, global_step, optimizer, learning_rate, moving_average_deca
             opt = tf.train.MomentumOptimizer(learning_rate, 0.9, use_nesterov=True)
         else:
             raise ValueError('Invalid optimization algorithm')
-    
+
         grads = opt.compute_gradients(total_loss, update_gradient_vars)
-        
+
     # Apply gradients.
     apply_gradient_op = opt.apply_gradients(grads, global_step=global_step)
-  
+
     # Add histograms for trainable variables.
     if log_histograms:
         for var in tf.trainable_variables():
             tf.summary.histogram(var.op.name, var)
-   
+
     # Add histograms for gradients.
     if log_histograms:
         for grad, var in grads:
             if grad is not None:
                 tf.summary.histogram(var.op.name + '/gradients', grad)
-  
+
     # Track the moving averages of all trainable variables.
     variable_averages = tf.train.ExponentialMovingAverage(
         moving_average_decay, global_step)
     variables_averages_op = variable_averages.apply(tf.trainable_variables())
-  
+
     with tf.control_dependencies([apply_gradient_op, variables_averages_op]):
         train_op = tf.no_op(name='train')
-  
+
     return train_op
 
 def prewhiten(x):
