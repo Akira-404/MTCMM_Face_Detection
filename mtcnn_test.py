@@ -10,11 +10,15 @@ dist = []
 name_tmp = []
 Emb_data = []
 image_tmp = []
-img = 'faceset/nana.jpg'
+img_path = 'faceset/nana.jpg'
 img_color = 'red'
 
 
-def read_photo():
+def read_video():
+    pass
+
+
+def read_photo(img):
     print(' 建立mtcnn人脸检测模型，加载参数')
     gpu_memory_fraction = 1.0
     with tf.Graph().as_default():
@@ -47,5 +51,6 @@ def read_photo():
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
-if __name__=="__main__":
-    read_photo()
+
+if __name__ == "__main__":
+    read_photo(img_path)
