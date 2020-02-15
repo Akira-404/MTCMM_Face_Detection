@@ -13,21 +13,15 @@ image_tmp = []
 img = 'faceset/nana.jpg'
 img_color = 'red'
 
-#
-# def to_rgb(img):
-#     w, h = img.shape
-#     ret = np.empty((w, h, 3), dtype=np.uint8)
-#     ret[:, :, 0] = ret[:, :, 1] = ret[:, :, 2] = img
-#     return ret
 
-
-print(' 建立mtcnn人脸检测模型，加载参数')
-gpu_memory_fraction = 1.0
-with tf.Graph().as_default():
-    gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=1.0, allow_growth=True)
-    sess = tf.Session(config=tf.ConfigProto(gpu_options=gpu_options, log_device_placement=False))
-    with sess.as_default():
-        pnet, rnet, onet = align.detect_face.create_mtcnn(sess, 'align/')
+def read_photo():
+    print(' 建立mtcnn人脸检测模型，加载参数')
+    gpu_memory_fraction = 1.0
+    with tf.Graph().as_default():
+        gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=1.0, allow_growth=True)
+        sess = tf.Session(config=tf.ConfigProto(gpu_options=gpu_options, log_device_placement=False))
+        with sess.as_default():
+            pnet, rnet, onet = align.detect_face.create_mtcnn(sess, 'align/')
 
     frame = cv2.imread(img)
     frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25, interpolation=cv2.INTER_NEAREST)
@@ -52,8 +46,6 @@ with tf.Graph().as_default():
     cv2.imshow('demo', frame)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
-    # key = cv2.waitKey(3)  # 按下esc退出
-    # if key == 27:
-    #     break
 
-cv2.destroyAllWindows()
+if __name__=="__main__":
+    read_photo()
