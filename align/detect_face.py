@@ -1,5 +1,3 @@
-""" Tensorflow实现了人脸检测/对齐算法
-"""
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -7,16 +5,12 @@ from six import string_types, iteritems
 
 import numpy as np
 import tensorflow as tf
-# from math import floor
 import cv2
 import os
 
 
 def layer(op):
-    """Decorator for composable network layers."""
-
     def layer_decorated(self, *args, **kwargs):
-        # Automatically set a name if not provided.
         # kwargs.setdefault:如果键不存在于字典中，将会添加键并将值设为默认值。
         name = kwargs.setdefault('name', self.get_unique_name(op.__name__))
         # Figure out the layer inputs.
@@ -26,6 +20,7 @@ def layer(op):
             layer_input = self.terminals[0]
         else:
             layer_input = list(self.terminals)
+
         # ＃执行操作并获得输出。
         layer_output = op(self, layer_input, *args, **kwargs)
         # 添加到图层LUT。
@@ -83,27 +78,26 @@ class Network(object):
                 try:
                     fed_layer = self.layers[fed_layer]
                 except KeyError:
-                    raise KeyError('Unknown layer name fed: %s' % fed_layer)
+                    raise KeyError('未知的层名称馈送: %s' % fed_layer)
             self.terminals.append(fed_layer)
         return self
 
     def get_output(self):
-        """Returns the current network output."""
+        """返回当前网络输出。"""
         return self.terminals[-1]
 
     def get_unique_name(self, prefix):
-        """Returns an index-suffixed unique name for the given prefix.
-        This is used for auto-generating layer names based on the type-prefix.
+        """返回给定前缀的索引后缀唯一名称。这用于根据类型前缀自动生成图层名。
         """
         ident = sum(t.startswith(prefix) for t, _ in self.layers.items()) + 1
         return '%s_%d' % (prefix, ident)
 
     def make_var(self, name, shape):
-        """Creates a new TensorFlow variable."""
+        """创建新的TensorFlow变量."""
         return tf.get_variable(name, shape, trainable=self.trainable)
 
     def validate_padding(self, padding):
-        """Verifies that the padding is one of the supported ones."""
+        """验证填充是否为受支持的填充之一."""
         assert padding in ('SAME', 'VALID')
 
     @layer
