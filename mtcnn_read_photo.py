@@ -31,7 +31,7 @@ with tf.Graph().as_default():
 
     frame = cv2.imread(img)
     frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25, interpolation=cv2.INTER_NEAREST)
-    # frame = cv2.resize(frame, (int(400), int(400)), interpolation=cv2.INTER_LINEAR)
+
     cv2.imshow('src', frame)
     bounding_boxes, _ = align.detect_face.detect_face(frame, minsize, pnet, rnet, onet, threshold, factor)
     faces_num = bounding_boxes.shape[0]  # 人脸数目
