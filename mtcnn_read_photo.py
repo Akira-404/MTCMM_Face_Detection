@@ -13,12 +13,12 @@ image_tmp = []
 img = 'faceset/nana.jpg'
 img_color = 'red'
 
-
-def to_rgb(img):
-    w, h = img.shape
-    ret = np.empty((w, h, 3), dtype=np.uint8)
-    ret[:, :, 0] = ret[:, :, 1] = ret[:, :, 2] = img
-    return ret
+#
+# def to_rgb(img):
+#     w, h = img.shape
+#     ret = np.empty((w, h, 3), dtype=np.uint8)
+#     ret[:, :, 0] = ret[:, :, 1] = ret[:, :, 2] = img
+#     return ret
 
 
 print(' 建立mtcnn人脸检测模型，加载参数')
@@ -29,7 +29,6 @@ with tf.Graph().as_default():
     with sess.as_default():
         pnet, rnet, onet = align.detect_face.create_mtcnn(sess, 'align/')
 
-while True:
     frame = cv2.imread(img)
     frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25, interpolation=cv2.INTER_NEAREST)
     # frame = cv2.resize(frame, (int(400), int(400)), interpolation=cv2.INTER_LINEAR)
@@ -48,11 +47,13 @@ while True:
     for face_position in bounding_boxes:
         face_position = face_position.astype(int)
         # print(face_position[0:4])
-        cv2.rectangle(frame, (face_position[0], face_position[1]), (face_position[2], face_position[3]), (0, 255, 0), 2)
+        cv2.rectangle(frame, (face_position[0], face_position[1]), (face_position[2], face_position[3]), (0, 255, 0), 1)
 
     cv2.imshow('demo', frame)
-    key = cv2.waitKey(3)  # 按下esc退出
-    if key == 27:
-        break
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+    # key = cv2.waitKey(3)  # 按下esc退出
+    # if key == 27:
+    #     break
 
 cv2.destroyAllWindows()
