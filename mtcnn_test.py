@@ -47,6 +47,7 @@ def read_photo(img):
         # print(face_position[0:4])
         cv2.rectangle(frame, (face_position[0], face_position[1]), (face_position[2], face_position[3]), (0, 255, 0), 1)
 
+    writer = tf.summary.FileWriter('logs/', sess.graph)
     cv2.imshow('demo', frame)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
