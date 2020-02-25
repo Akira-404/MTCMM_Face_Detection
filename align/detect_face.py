@@ -190,7 +190,7 @@ class PNet(Network):
         (self.feed('data')
          .conv(3, 3, 10, 1, 1, padding='VALID', relu=False, name='conv1')
          .prelu(name='PReLU1')
-         .max_pool(2, 2, 2, 2, name='pool1')
+         .max_pool(2, 2, 2, 2, name='max_pool')
          .conv(3, 3, 16, 1, 1, padding='VALID', relu=False, name='conv2')
          .prelu(name='PReLU2')
          .conv(3, 3, 32, 1, 1, padding='VALID', relu=False, name='conv3')
