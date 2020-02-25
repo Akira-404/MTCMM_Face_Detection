@@ -101,18 +101,7 @@ class Network(object):
         assert padding in ('SAME', 'VALID')
 
     @layer
-    def conv(self,
-             inp,
-             k_h,
-             k_w,
-             c_o,
-             s_h,
-             s_w,
-             name,
-             relu=True,  # 激活函数
-             padding='SAME',  # 填充类型
-             group=1,
-             biased=True):
+    def conv(self, inp, k_h, k_w, c_o, s_h, s_w, name, relu=True, padding='SAME', group=1, biased=True):
         # 验证填充是否可接受
         self.validate_padding(padding)
         # 获取输入中的通道数
@@ -145,13 +134,11 @@ class Network(object):
             output = tf.nn.relu(inp) + tf.multiply(alpha, -tf.nn.relu(-inp))
         return output
 
+
     @layer
     def max_pool(self, inp, k_h, k_w, s_h, s_w, name, padding='SAME'):
         self.validate_padding(padding)
-        return tf.nn.max_pool(inp,
-                              ksize=[1, k_h, k_w, 1],
-                              strides=[1, s_h, s_w, 1],
-                              padding=padding,
+        return tf.nn.max_pool(inp, ksize=[1, k_h, k_w, 1], strides=[1, s_h, s_w, 1], padding=padding,
                               name=name)
 
     @layer
@@ -159,7 +146,6 @@ class Network(object):
         with tf.variable_scope(name):
             input_shape = inp.get_shape()
             if input_shape.ndims == 4:
-                # The input is spatial. Vectorize it first.
                 dim = 1
                 for d in input_shape[1:].as_list():
                     dim *= int(d)
@@ -203,7 +189,7 @@ class PNet(Network):
 
 class RNet(Network):
     def setup(self):
-        (self.feed('data')  # pylint: disable=no-value-for-parameter, no-member
+        (self.feed('data')
          .conv(3, 3, 28, 1, 1, padding='VALID', relu=False, name='conv1')
          .prelu(name='prelu1')
          .max_pool(3, 3, 2, 2, name='pool1')
@@ -277,11 +263,11 @@ def create_mtcnn(sess, model_path):
         onet.load(os.path.join(model_path, 'det3.npy'), sess)
 
     pnet_func = lambda img: sess.run(('pnet/conv4-2/BiasAdd:0', 'pnet/prob1:0'),
-                                    feed_dict={'pnet/pnet_input:0': img})
+                                     feed_dict={'pnet/pnet_input:0': img})
     rnet_func = lambda img: sess.run(('rnet/conv5-2/conv5-2:0', 'rnet/prob1:0'),
-                                    feed_dict={'rnet/rnet_input:0': img})
+                                     feed_dict={'rnet/rnet_input:0': img})
     onet_func = lambda img: sess.run(('onet/conv6-2/conv6-2:0', 'onet/conv6-3/conv6-3:0', 'onet/prob1:0'),
-                                    feed_dict={'onet/onet_input:0': img})
+                                     feed_dict={'onet/onet_input:0': img})
     return pnet_func, rnet_func, onet_func
 
 
@@ -654,6 +640,7 @@ def bbreg(boundingbox, reg):
     b4 = boundingbox[:, 3] + reg[:, 3] * h
     boundingbox[:, 0:4] = np.transpose(np.vstack([b1, b2, b3, b4]))
     return boundingbox
+
 
 # 生成边界框
 def generateBoundingBox(imap, reg, scale, t):
