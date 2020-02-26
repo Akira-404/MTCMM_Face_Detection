@@ -340,8 +340,8 @@ def detect_face(img, minsize, pnet, rnet, onet, threshold, factor):
 
     numbox = total_boxes.shape[0]
 
+    # 第二步
     if numbox > 0:
-        # 第二步
         tempimg = np.zeros((24, 24, 3, numbox))
         for k in range(0, numbox):
             tmp = np.zeros((int(tmph[k]), int(tmpw[k]), 3))
@@ -368,8 +368,8 @@ def detect_face(img, minsize, pnet, rnet, onet, threshold, factor):
 
     numbox = total_boxes.shape[0]
 
+    # 第三步
     if numbox > 0:
-        # 第三步
         total_boxes = np.fix(total_boxes).astype(np.int32)
         dy, edy, dx, edx, y, ey, x, ex, tmpw, tmph = pad(total_boxes.copy(), w, h)
         tempimg = np.zeros((48, 48, 3, numbox))
