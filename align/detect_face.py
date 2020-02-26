@@ -176,15 +176,19 @@ class PNet(Network):
         (self.feed('data')
          .conv(3, 3, 10, 1, 1, padding='VALID', relu=False, name='conv1')
          .prelu(name='PReLU1')
+
          .max_pool(2, 2, 2, 2, name='max_pool')
+
          .conv(3, 3, 16, 1, 1, padding='VALID', relu=False, name='conv2')
          .prelu(name='PReLU2')
+
          .conv(3, 3, 32, 1, 1, padding='VALID', relu=False, name='conv3')
          .prelu(name='PReLU3')
+
          .conv(1, 1, 2, 1, 1, relu=False, name='conv4-1')
          .softmax(3, name='prob1'))
-        (self.feed('PReLU3')
-         .conv(1, 1, 4, 1, 1, relu=False, name='conv4-2'))
+
+        (self.feed('PReLU3').conv(1, 1, 4, 1, 1, relu=False, name='conv4-2'))
 
 
 class RNet(Network):
@@ -207,8 +211,7 @@ class RNet(Network):
          .fc(2, relu=False, name='conv5-1')
          .softmax(1, name='prob1'))
 
-        (self.feed('prelu4')  # pylint: disable=no-value-for-parameter
-         .fc(4, relu=False, name='conv5-2'))
+        (self.feed('prelu4').fc(4, relu=False, name='conv5-2'))
 
 
 class ONet(Network):
@@ -216,14 +219,17 @@ class ONet(Network):
         (self.feed('data')  # pylint: disable=no-value-for-parameter, no-member
          .conv(3, 3, 32, 1, 1, padding='VALID', relu=False, name='conv1')
          .prelu(name='prelu1')
+
          .max_pool(3, 3, 2, 2, name='pool1')
 
          .conv(3, 3, 64, 1, 1, padding='VALID', relu=False, name='conv2')
          .prelu(name='prelu2')
+
          .max_pool(3, 3, 2, 2, padding='VALID', name='pool2')
 
          .conv(3, 3, 64, 1, 1, padding='VALID', relu=False, name='conv3')
          .prelu(name='prelu3')
+
          .max_pool(2, 2, 2, 2, name='pool3')
 
          .conv(2, 2, 128, 1, 1, padding='VALID', relu=False, name='conv4')
@@ -235,11 +241,8 @@ class ONet(Network):
          .fc(2, relu=False, name='conv6-1')
          .softmax(1, name='prob1'))
 
-        (self.feed('prelu5')  # pylint: disable=no-value-for-parameter
-         .fc(4, relu=False, name='conv6-2'))
-
-        (self.feed('prelu5')  # pylint: disable=no-value-for-parameter
-         .fc(10, relu=False, name='conv6-3'))
+        (self.feed('prelu5') .fc(4, relu=False, name='conv6-2'))
+        (self.feed('prelu5').fc(10, relu=False, name='conv6-3'))
 
 
 # 构建MTCNN网络模型 P-R-O
@@ -250,16 +253,19 @@ def create_mtcnn(sess, model_path):
     with tf.variable_scope('pnet'):
         data = tf.placeholder(tf.float32, (None, None, None, 3), name='pnet_input')
         pnet = PNet({'data': data})
+        # 加载PNnet参数文件
         pnet.load(os.path.join(model_path, 'det1.npy'), sess)
 
     with tf.variable_scope('rnet'):
         data = tf.placeholder(tf.float32, (None, 24, 24, 3), name='rnet_input')
         rnet = RNet({'data': data})
+        # 加载RNet参数文件
         rnet.load(os.path.join(model_path, 'det2.npy'), sess)
 
     with tf.variable_scope('onet'):
         data = tf.placeholder(tf.float32, (None, 48, 48, 3), name='onet_input')
         onet = ONet({'data': data})
+        # 加载ONet参数文件
         onet.load(os.path.join(model_path, 'det3.npy'), sess)
 
     pnet_func = lambda img: sess.run(('pnet/conv4-2/BiasAdd:0', 'pnet/prob1:0'),
