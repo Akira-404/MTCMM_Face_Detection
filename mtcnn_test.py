@@ -14,10 +14,6 @@ img_path = 'faceset/nana.jpg'
 img_color = 'red'
 
 
-def read_video():
-    pass
-
-
 def read_photo(img):
     print(' 建立mtcnn人脸检测模型，加载参数')
     gpu_memory_fraction = 1.0
