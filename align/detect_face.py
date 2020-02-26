@@ -134,7 +134,6 @@ class Network(object):
             output = tf.nn.relu(inp) + tf.multiply(alpha, -tf.nn.relu(-inp))
         return output
 
-
     @layer
     def max_pool(self, inp, k_h, k_w, s_h, s_w, name, padding='SAME'):
         self.validate_padding(padding)
@@ -241,7 +240,7 @@ class ONet(Network):
          .fc(2, relu=False, name='conv6-1')
          .softmax(1, name='prob1'))
 
-        (self.feed('prelu5') .fc(4, relu=False, name='conv6-2'))
+        (self.feed('prelu5').fc(4, relu=False, name='conv6-2'))
         (self.feed('prelu5').fc(10, relu=False, name='conv6-3'))
 
 
@@ -268,6 +267,7 @@ def create_mtcnn(sess, model_path):
         # 加载ONet参数文件
         onet.load(os.path.join(model_path, 'det3.npy'), sess)
 
+    #  lambda argument_list: expression
     pnet_func = lambda img: sess.run(('pnet/conv4-2/BiasAdd:0', 'pnet/prob1:0'),
                                      feed_dict={'pnet/pnet_input:0': img})
     rnet_func = lambda img: sess.run(('rnet/conv5-2/conv5-2:0', 'rnet/prob1:0'),
@@ -293,12 +293,14 @@ def detect_face(img, minsize, pnet, rnet, onet, threshold, factor):
     minl = np.amin([h, w])
     m = 12.0 / minsize
     minl = minl * m
-    # create scale pyramid
+    # 创建比例金字塔
     scales = []
     while minl >= 12:
         scales += [m * np.power(factor, factor_count)]
         minl = minl * factor
         factor_count += 1
+    for scale in scales:
+        print('scales:', scale)
 
     # 第一步
     for scale in scales:
@@ -314,7 +316,6 @@ def detect_face(img, minsize, pnet, rnet, onet, threshold, factor):
 
         boxes, _ = generateBoundingBox(out1[0, :, :, 1].copy(), out0[0, :, :, :].copy(), scale, threshold[0])
 
-        # inter-scale nms（非极大值抑制）
         with tf.name_scope('NMS'):
             pick = nms(boxes.copy(), 0.5, 'Union')
         if boxes.size > 0 and pick.size > 0:
@@ -650,7 +651,7 @@ def bbreg(boundingbox, reg):
 
 # 生成边界框
 def generateBoundingBox(imap, reg, scale, t):
-    stride = 2
+    stride = 2  # 步长
     cellsize = 12
 
     imap = np.transpose(imap)
@@ -660,6 +661,7 @@ def generateBoundingBox(imap, reg, scale, t):
     dy2 = np.transpose(reg[:, :, 3])
     y, x = np.where(imap >= t)
     if y.shape[0] == 1:
+        # flipud：对数组进行上下翻转。
         dx1 = np.flipud(dx1)
         dy1 = np.flipud(dy1)
         dx2 = np.flipud(dx2)
@@ -710,8 +712,8 @@ def nms(boxes, threshold, method):
 
 
 # function [dy edy dx edx y ey x ex tmpw tmph] = pad(total_boxes,w,h)
+# 计算填充坐标（将边界框填充到正方形）
 def pad(total_boxes, w, h):
-    """计算填充坐标（将边界框填充到正方形）"""
     tmpw = (total_boxes[:, 2] - total_boxes[:, 0] + 1).astype(np.int32)
     tmph = (total_boxes[:, 3] - total_boxes[:, 1] + 1).astype(np.int32)
     numbox = total_boxes.shape[0]
@@ -745,9 +747,8 @@ def pad(total_boxes, w, h):
     return dy, edy, dx, edx, y, ey, x, ex, tmpw, tmph
 
 
-# function [bboxA] = rerec(bboxA)
+# 将bboxA转换为方形.
 def rerec(bboxA):
-    """将bboxA转换为方形."""
     h = bboxA[:, 3] - bboxA[:, 1]
     w = bboxA[:, 2] - bboxA[:, 0]
     l = np.maximum(w, h)
@@ -757,19 +758,7 @@ def rerec(bboxA):
     return bboxA
 
 
+# resize
 def imresample(img, sz):
-    im_data = cv2.resize(img, (sz[1], sz[0]), interpolation=cv2.INTER_AREA)  # @UndefinedVariable
+    im_data = cv2.resize(img, (sz[1], sz[0]), interpolation=cv2.INTER_AREA)
     return im_data
-
-    # This method is kept for debugging purpose
-#     h=img.shape[0]
-#     w=img.shape[1]
-#     hs, ws = sz
-#     dx = float(w) / ws
-#     dy = float(h) / hs
-#     im_data = np.zeros((hs,ws,3))
-#     for a1 in range(0,hs):
-#         for a2 in range(0,ws):
-#             for a3 in range(0,3):
-#                 im_data[a1,a2,a3] = img[int(floor(a1*dy)),int(floor(a2*dx)),a3]
-#     return im_data
