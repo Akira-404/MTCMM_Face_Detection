@@ -10,7 +10,7 @@ dist = []
 name_tmp = []
 Emb_data = []
 image_tmp = []
-img_path = 'faceset/nana.jpg'
+img_path = 'faceset/img2.jpg'
 
 
 def read_photo(img):
@@ -21,13 +21,13 @@ def read_photo(img):
             pnet, rnet, onet = align.detect_face.create_mtcnn(sess, 'align/')
 
     frame = cv2.imread(img)
-    frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25, interpolation=cv2.INTER_AREA)
+    # frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25, interpolation=cv2.INTER_AREA)
 
     cv2.imshow('src', frame)
     bounding_boxes, points = align.detect_face.detect_face(frame, minsize, pnet, rnet, onet, threshold, factor)
     faces_num = bounding_boxes.shape[0]  # 人脸数目
     print('bounding_boxes.shape:', bounding_boxes.shape, '\n bounding_boxes:', bounding_boxes)
-    print('points shape:', points.shape, '\n points:', points)
+    # print('points shape:', points.shape, '\n points:', points)
     print('找到人脸数目为：{}'.format(faces_num))
 
     for face_position in bounding_boxes:
@@ -35,8 +35,20 @@ def read_photo(img):
         cv2.rectangle(frame, (face_position[0], face_position[1]), (face_position[2], face_position[3]), (0, 255, 0), 1)
         cv2.circle(frame, (face_position[0], face_position[1]), 2, (0, 0, 255), -1)
         cv2.circle(frame, (face_position[2], face_position[3]), 2, (0, 0, 255), -1)
+        w=face_position[2]-face_position[0]
+        h=face_position[3]-face_position[1]
+        size= str(w)+'x'+str(h)
+        cv2.putText(
+            frame,
+            size,
+            (face_position[0], face_position[1]),
+            cv2.FONT_HERSHEY_COMPLEX_SMALL,
+            1,
+            (0, 0, 255),
+            thickness=1,
+            lineType=1)
 
-    writer = tf.summary.FileWriter('logs/', sess.graph)
+    # writer = tf.summary.FileWriter('logs/', sess.graph)
     cv2.imshow('demo', frame)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
