@@ -30,16 +30,17 @@ def read_photo(img):
     # print('points shape:', points.shape, '\n points:', points)
     print('找到人脸数目为：{}'.format(faces_num))
 
-    for face_position in bounding_boxes:
+    for i, face_position in enumerate(bounding_boxes):
         face_position = face_position.astype(int)
         cv2.rectangle(frame, (face_position[0], face_position[1]), (face_position[2], face_position[3]), (0, 255, 0), 1)
         cv2.circle(frame, (face_position[0], face_position[1]), 2, (0, 0, 255), -1)
         cv2.circle(frame, (face_position[2], face_position[3]), 2, (0, 0, 255), -1)
         w = face_position[2] - face_position[0]
         h = face_position[3] - face_position[1]
+        S = w * h
         print('w:', face_position[2], '-', face_position[0], '=', w)
         print('h', face_position[3], '-', face_position[1], '=', h, '\n')
-        S = w * h
+        print('-->',i)
         cv2.putText(
             frame,
             str(S),
