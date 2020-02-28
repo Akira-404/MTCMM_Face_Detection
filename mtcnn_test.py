@@ -21,7 +21,7 @@ def read_photo(img):
             pnet, rnet, onet = align.detect_face.create_mtcnn(sess, 'align/')
 
     frame = cv2.imread(img)
-    # frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25, interpolation=cv2.INTER_AREA)
+    frame = cv2.resize(frame, (0, 0), fx=0.5, fy=0.5, interpolation=cv2.INTER_AREA)
 
     cv2.imshow('src', frame)
     bounding_boxes, points = align.detect_face.detect_face(frame, minsize, pnet, rnet, onet, threshold, factor)
@@ -35,16 +35,18 @@ def read_photo(img):
         cv2.rectangle(frame, (face_position[0], face_position[1]), (face_position[2], face_position[3]), (0, 255, 0), 1)
         cv2.circle(frame, (face_position[0], face_position[1]), 2, (0, 0, 255), -1)
         cv2.circle(frame, (face_position[2], face_position[3]), 2, (0, 0, 255), -1)
-        w=face_position[2]-face_position[0]
-        h=face_position[3]-face_position[1]
-        size= str(w)+'x'+str(h)
+        w = face_position[2] - face_position[0]
+        h = face_position[3] - face_position[1]
+        print('w:', face_position[2], '-', face_position[0], '=', w)
+        print('h', face_position[3], '-', face_position[1], '=', h, '\n')
+        S = w * h
         cv2.putText(
             frame,
-            size,
+            str(S),
             (face_position[0], face_position[1]),
             cv2.FONT_HERSHEY_COMPLEX_SMALL,
             1,
-            (0, 0, 255),
+            (255, 0, 0),
             thickness=1,
             lineType=1)
 
