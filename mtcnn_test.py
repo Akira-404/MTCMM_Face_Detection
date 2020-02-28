@@ -2,6 +2,7 @@ import tensorflow as tf
 import cv2
 import align.detect_face
 import os
+import numpy as np
 
 minsize = 20  # 脸部最小尺寸
 threshold = [0.6, 0.7, 0.7]  # 三步阈值
@@ -30,6 +31,10 @@ def read_photo(img):
     # print('points shape:', points.shape, '\n points:', points)
     print('找到人脸数目为：{}'.format(faces_num))
 
+    Index = []  # 序列
+    Area = []  # 面积
+    Position = []  # 坐标
+
     for i, face_position in enumerate(bounding_boxes):
         face_position = face_position.astype(int)
         cv2.rectangle(frame, (face_position[0], face_position[1]), (face_position[2], face_position[3]), (0, 255, 0), 1)
@@ -40,16 +45,34 @@ def read_photo(img):
         S = w * h
         print('w:', face_position[2], '-', face_position[0], '=', w)
         print('h', face_position[3], '-', face_position[1], '=', h, '\n')
-        print('-->',i)
+        print('-->', i + 1)
+
+        Index.append(i)
+        Area.append(S)
+        Position.append(face_position)
+
         cv2.putText(
             frame,
             str(S),
             (face_position[0], face_position[1]),
             cv2.FONT_HERSHEY_COMPLEX_SMALL,
             1,
-            (255, 0, 0),
+            (0, 0, 255),
             thickness=1,
             lineType=1)
+
+    maxAreaIndex = np.argmax(Area)
+    print('最大面积索引：', np.argmax(Area), '最大面积：', max(Area))
+    max_face_position = Position[maxAreaIndex]
+    cv2.putText(
+        frame,
+        'MAX',
+        (max_face_position[0], max_face_position[1]-15),
+        cv2.FONT_HERSHEY_COMPLEX_SMALL,
+        1,
+        (255, 0, 0),
+        thickness=1,
+        lineType=1)
 
     # writer = tf.summary.FileWriter('logs/', sess.graph)
     cv2.imshow('demo', frame)
