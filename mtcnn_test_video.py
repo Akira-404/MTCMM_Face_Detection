@@ -4,6 +4,8 @@ import align.detect_face
 import numpy as np
 import autopep8
 
+vidoe_path='D:\\PR_Project\\VagrantEarth.mpeg'
+
 minsize = 20  # 脸部最小尺寸
 threshold = [0.6, 0.7, 0.7]  # 三步阈值
 factor = 0.709  # 缩放金字塔缩放因子
@@ -96,14 +98,14 @@ def get_face(frame):
 
 
 if __name__ == '__main__':
-    camera = cv2.VideoCapture(0)
+    camera = cv2.VideoCapture(vidoe_path)
     cv2.namedWindow('video')
     init_mtcnn()
     while True:
-        ret, frame = camera.read()
+        ret, frame = camera.read(0)
         if ret:
-            frame = cv2.flip(frame, 1)
-            # frame = cv2.resize(frame, (0, 0), fx=0.5, fy=0.5, interpolation=cv2.INTER_AREA)
+            # frame = cv2.flip(frame, 1)
+            frame = cv2.resize(frame, (0, 0), fx=0.5, fy=0.5, interpolation=cv2.INTER_AREA)
             bounding_boxes, points = align.detect_face.detect_face(
                 frame, minsize, pnet, rnet, onet, threshold, factor)
             faces_num = bounding_boxes.shape[0]  # 人脸数目
