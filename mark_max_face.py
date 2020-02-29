@@ -35,7 +35,7 @@ def read_photo(img):
             pnet, rnet, onet = align.detect_face.create_mtcnn(sess, 'align/')
 
     frame = cv2.imread(img)
-    # frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25, interpolation=cv2.INTER_AREA)
+    frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25, interpolation=cv2.INTER_AREA)
 
     cv2.imshow('src', frame)
     bounding_boxes, points = align.detect_face.detect_face(frame, minsize, pnet, rnet, onet, threshold, factor)
@@ -60,23 +60,23 @@ def read_photo(img):
         Area.append(S)
         Position.append(face_position)
 
-        max_face_position, is_empty = max_face(Area, Position)
-        # 如果不是空的绘制面部边框
-        if is_empty is False:
-            cv2.rectangle(frame, (max_face_position[0], max_face_position[1]),
-                          (max_face_position[2], max_face_position[3]),
-                          (0, 255, 0), 1)
-            cv2.circle(frame, (max_face_position[0], max_face_position[1]), 2, (0, 0, 255), -1)
-            cv2.circle(frame, (max_face_position[2], max_face_position[3]), 2, (0, 0, 255), -1)
-            cv2.putText(
-                frame,
-                'Max Face',
-                (max_face_position[0], max_face_position[1]),
-                cv2.FONT_HERSHEY_COMPLEX_SMALL,
-                1,
-                (0, 0, 255),
-                thickness=1,
-                lineType=1)
+    max_face_position, is_empty = max_face(Area, Position)
+    # 如果不是空的绘制面部边框
+    if is_empty is False:
+        cv2.rectangle(frame, (max_face_position[0], max_face_position[1]),
+                      (max_face_position[2], max_face_position[3]),
+                      (0, 255, 0), 1)
+        cv2.circle(frame, (max_face_position[0], max_face_position[1]), 2, (0, 0, 255), -1)
+        cv2.circle(frame, (max_face_position[2], max_face_position[3]), 2, (0, 0, 255), -1)
+        cv2.putText(
+            frame,
+            'Max Face',
+            (max_face_position[0], max_face_position[1]),
+            cv2.FONT_HERSHEY_COMPLEX_SMALL,
+            1,
+            (0, 0, 255),
+            thickness=1,
+            lineType=1)
 
     # writer = tf.summary.FileWriter('logs/', sess.graph)
     cv2.imshow('demo', frame)
