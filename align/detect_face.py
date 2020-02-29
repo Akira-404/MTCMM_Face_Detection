@@ -295,8 +295,6 @@ def detect_face(img, minsize, pnet, rnet, onet, threshold, factor):
         scales += [m * np.power(factor, factor_count)]
         minl = minl * factor
         factor_count += 1
-    for scale in scales:
-        print('scales:', scale)
 
     # 第一步
     for scale in scales:
