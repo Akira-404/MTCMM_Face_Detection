@@ -44,59 +44,6 @@ def init_mtcnn():
             pnet, rnet, onet = align.detect_face.create_mtcnn(sess, 'align/')
 
 
-def get_face(frame):
-    # frame = cv2.imread(frame)
-    frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25,
-                       interpolation=cv2.INTER_AREA)
-
-    bounding_boxes, points = align.detect_face.detect_face(
-        frame, minsize, pnet, rnet, onet, threshold, factor)
-    faces_num = bounding_boxes.shape[0]  # 人脸数目
-    print(
-        'bounding_boxes.shape:',
-        bounding_boxes.shape,
-        '\n bounding_boxes:',
-        bounding_boxes)
-    print('找到人脸数目为：{}'.format(faces_num))
-
-    Index = []  # 序列
-    Area = []  # 面积
-    Position = []  # 坐标
-
-    for i, face_position in enumerate(bounding_boxes):
-        face_position = face_position.astype(int)
-        w = face_position[2] - face_position[0]
-        h = face_position[3] - face_position[1]
-        S = w * h
-        print('w:', face_position[2], '-', face_position[0], '=', w)
-        print('h', face_position[3], '-', face_position[1], '=', h, '\n')
-        print('-->', i + 1)
-        Index.append(i)
-        Area.append(S)
-        Position.append(face_position)
-
-    max_face_position = max_face(Area, Position)
-
-    cv2.rectangle(frame,
-                  (max_face_position[0], max_face_position[1]),
-                  (max_face_position[2], max_face_position[3]),
-                  (0, 255, 0), 1)
-    cv2.circle(
-        frame, (max_face_position[0], max_face_position[1]), 2, (0, 0, 255), -1)
-    cv2.circle(
-        frame, (max_face_position[2], max_face_position[3]), 2, (0, 0, 255), -1)
-    cv2.putText(
-        frame,
-        'Max Face',
-        (max_face_position[0], max_face_position[1]),
-        cv2.FONT_HERSHEY_COMPLEX_SMALL,
-        1,
-        (0, 0, 255),
-        thickness=1,
-        lineType=1)
-    return frame
-
-
 if __name__ == '__main__':
     camera = cv2.VideoCapture(vidoe_path)
     cv2.namedWindow('video')
