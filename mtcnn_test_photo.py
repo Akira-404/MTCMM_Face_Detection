@@ -53,7 +53,7 @@ def read_photo(img):
         w = face_position[2] - face_position[0]
         h = face_position[3] - face_position[1]
         S = w * h
-        print('-->', i + 1)
+        print('-->', i)
         print('w:', face_position[2], '-', face_position[0], '=', w)
         print('h:', face_position[3], '-', face_position[1], '=', h)
 
