@@ -11,7 +11,7 @@ dist = []
 name_tmp = []
 Emb_data = []
 image_tmp = []
-img_path = 'faceset/me.jpg'
+img_path = 'faceset/img2.jpg'
 
 
 # 获取最大人脸索引
@@ -35,7 +35,7 @@ def read_photo(img):
             pnet, rnet, onet = align.detect_face.create_mtcnn(sess, 'align/')
 
     frame = cv2.imread(img)
-    frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25, interpolation=cv2.INTER_AREA)
+    frame = cv2.resize(frame, (0, 0), fx=0.5, fy=0.5, interpolation=cv2.INTER_AREA)
 
     cv2.imshow('src', frame)
     bounding_boxes, points = align.detect_face.detect_face(frame, minsize, pnet, rnet, onet, threshold, factor)
@@ -53,9 +53,10 @@ def read_photo(img):
         w = face_position[2] - face_position[0]
         h = face_position[3] - face_position[1]
         S = w * h
+        print('-->', i)
         print('w:', face_position[2], '-', face_position[0], '=', w)
-        print('h', face_position[3], '-', face_position[1], '=', h, '\n')
-        print('-->', i + 1)
+        print('h', face_position[3], '-', face_position[1], '=', h)
+
         Index.append(i)
         Area.append(S)
         Position.append(face_position)
